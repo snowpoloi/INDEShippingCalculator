@@ -1,4 +1,4 @@
-namespace INDEShippingCalculator.Models
+namespace INDEShipping.Models
 {
     public class ErrorViewModel
     {

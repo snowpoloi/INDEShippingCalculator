@@ -1,8 +1,8 @@
-using INDEShippingCalculator.Models;
+using INDEShipping.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace INDEShippingCalculator.Controllers
+namespace INDEShipping.Controllers
 {
     public class HomeController : Controller
     {
