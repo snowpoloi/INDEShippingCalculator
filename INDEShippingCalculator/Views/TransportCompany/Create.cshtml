@@ -1,0 +1,48 @@
+﻿@model INDEShipping.Models.TransportCompany
+
+<h2>Create Transport Company</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxLength" class="control-label"></label>
+        <input asp-for="MaxLength" class="form-control" />
+        <span asp-validation-for="MaxLength" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxWidth" class="control-label"></label>
+        <input asp-for="MaxWidth" class="form-control" />
+        <span asp-validation-for="MaxWidth" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxHeight" class="control-label"></label>
+        <input asp-for="MaxHeight" class="form-control" />
+        <span asp-validation-for="MaxHeight" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxWeight" class="control-label"></label>
+        <input asp-for="MaxWeight" class="form-control" />
+        <span asp-validation-for="MaxWeight" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxCubic" class="control-label"></label>
+        <input asp-for="MaxCubic" class="form-control" />
+        <span asp-validation-for="MaxCubic" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="OfferType" class="control-label"></label>
+        <input asp-for="OfferType" class="form-control" />
+        <span asp-validation-for="OfferType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
