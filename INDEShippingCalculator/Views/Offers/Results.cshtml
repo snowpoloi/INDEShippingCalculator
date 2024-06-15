@@ -1,0 +1,41 @@
+﻿@model IEnumerable<INDEShipping.Models.Offer>
+
+@{
+    ViewData["Title"] = "Shipping Cost Results";
+}
+
+<h2>Shipping Cost Results</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Transport Company</th>
+            <th>Min Weight</th>
+            <th>Max Weight</th>
+            <th>Base Cost</th>
+            <th>Extra Cost Per Kg</th>
+            <th>Extra Cost Difficult</th>
+            <th>Cubic Rate</th>
+            <th>Min Charge</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item?.TransportCompany?.Name</td>
+                <td>@item?.MinWeight</td>
+                <td>@item?.MaxWeight</td>
+                <td>@item?.BaseCost</td>
+                <td>@item?.ExtraCostPerKg</td>
+                <td>@item?.ExtraCostDifficult</td>
+                <td>@item?.CubicRate</td>
+                <td>@item?.MinCharge</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
