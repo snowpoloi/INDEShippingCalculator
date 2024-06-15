@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Calculate Shipping Cost";
+}
+
+<h2>Calculate Shipping Cost</h2>
+
+<form id="calculateShippingCostForm">
+    <div class="form-group">
+        <label for="TransportCompanyId">Transport Company</label>
+        <select id="TransportCompanyId" class="form-control" name="TransportCompanyId">
+            @foreach (var company in ViewBag.TransportCompanies)
+            {
+                <option value="@company.Id">@company.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Weight">Weight (kg)</label>
+        <input type="number" id="Weight" class="form-control" name="Weight" />
+    </div>
+    <div class="form-group">
+        <label for="Volume">Volume (m³)</label>
+        <input type="number" id="Volume" class="form-control" name="Volume" />
+    </div>
+    <div class="form-group">
+        <label for="PostalCode">Postal Code</label>
+        <input type="text" id="PostalCode" class="form-control" name="PostalCode" />
+    </div>
+    <button type="submit" class="btn btn-primary">Calculate</button>
+</form>
+
+<div id="result" style="margin-top: 20px;"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#calculateShippingCostForm').submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("CalculateShippingCost", "Offers")',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        $('#result').html('Shipping Cost: ' + result.cost + ' EUR');
+                    },
+                    error: function () {
+                        $('#result').html('An error occurred while calculating the shipping cost.');
+                    }
+                });
+            });
+        });
+    </script>
+}

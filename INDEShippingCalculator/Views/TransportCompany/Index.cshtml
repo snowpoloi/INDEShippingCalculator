@@ -6,9 +6,6 @@
 
 <h2>Transport Companies</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -26,13 +23,13 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxLength)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxWidth)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxHeight)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxWeight)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxCubic)</td>
-                <td>@Html.DisplayFor(modelItem => item.OfferType)</td>
+                <td>@item.Name</td>
+                <td>@item.MaxLength</td>
+                <td>@item.MaxWidth</td>
+                <td>@item.MaxHeight</td>
+                <td>@item.MaxWeight</td>
+                <td>@item.MaxCubic</td>
+                <td>@item.OfferType</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
@@ -42,3 +39,5 @@
         }
     </tbody>
 </table>
+
+<a asp-action="Create" class="btn btn-primary">Create New</a>

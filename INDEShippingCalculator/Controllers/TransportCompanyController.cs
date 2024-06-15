@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using INDEShipping.Data;
+﻿using INDEShipping.Data;
 using INDEShipping.Models;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace INDEShipping.Controllers
 {
@@ -37,7 +38,5 @@ namespace INDEShipping.Controllers
             }
             return View(transportCompany);
         }
-
-        // Add Edit, Details, Delete actions as needed
     }
 }

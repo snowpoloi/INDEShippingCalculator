@@ -1,0 +1,57 @@
+﻿@model INDEShipping.Models.TransportCompany
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Transport Company</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            Max Length
+        </dt>
+        <dd class="col-sm-10">
+            @Model.MaxLength
+        </dd>
+        <dt class="col-sm-2">
+            Max Width
+        </dt>
+        <dd class="col-sm-10">
+            @Model.MaxWidth
+        </dd>
+        <dt class="col-sm-2">
+            Max Height
+        </dt>
+        <dd class="col-sm-10">
+            @Model.MaxHeight
+        </dd>
+        <dt class="col-sm-2">
+            Max Weight
+        </dt>
+        <dd class="col-sm-10">
+            @Model.MaxWeight
+        </dd>
+        <dt class="col-sm-2">
+            Max Cubic
+        </dt>
+        <dd class="col-sm-10">
+            @Model.MaxCubic
+        </dd>
+        <dt class="col-sm-2">
+            Offer Type
+        </dt>
+        <dd class="col-sm-10">
+            @Model.OfferType
+        </dd>
+    </dl>
+</div>
+
