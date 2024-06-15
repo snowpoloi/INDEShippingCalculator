@@ -1,0 +1,62 @@
+﻿@model INDEShipping.Models.Offer
+
+@{
+    ViewData["Title"] = "Create Offer";
+}
+
+<h2>Create Offer</h2>
+
+<h4>Offer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="TransportCompanyId" class="control-label"></label>
+                <select asp-for="TransportCompanyId" class="form-control" asp-items="ViewBag.TransportCompanyId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinWeight" class="control-label"></label>
+                <input asp-for="MinWeight" class="form-control" />
+                <span asp-validation-for="MinWeight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxWeight" class="control-label"></label>
+                <input asp-for="MaxWeight" class="form-control" />
+                <span asp-validation-for="MaxWeight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BaseCost" class="control-label"></label>
+                <input asp-for="BaseCost" class="form-control" />
+                <span asp-validation-for="BaseCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExtraCostPerKg" class="control-label"></label>
+                <input asp-for="ExtraCostPerKg" class="form-control" />
+                <span asp-validation-for="ExtraCostPerKg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExtraCostDifficult" class="control-label"></label>
+                <input asp-for="ExtraCostDifficult" class="form-control" />
+                <span asp-validation-for="ExtraCostDifficult" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CubicRate" class="control-label"></label>
+                <input asp-for="CubicRate" class="form-control" />
+                <span asp-validation-for="CubicRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinCharge" class="control-label"></label>
+                <input asp-for="MinCharge" class="form-control" />
+                <span asp-validation-for="MinCharge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

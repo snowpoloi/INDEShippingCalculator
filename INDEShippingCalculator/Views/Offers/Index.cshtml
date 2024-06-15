@@ -1,0 +1,41 @@
+﻿@model IEnumerable<INDEShipping.Models.Offer>
+
+<h2>Offers</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Transport Company</th>
+            <th>Min Weight</th>
+            <th>Max Weight</th>
+            <th>Base Cost</th>
+            <th>Extra Cost Per Kg</th>
+            <th>Extra Cost Difficult</th>
+            <th>Cubic Rate</th>
+            <th>Min Charge</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item?.TransportCompany?.Name</td>
+                <td>@item?.MinWeight</td>
+                <td>@item?.MaxWeight</td>
+                <td>@item?.BaseCost</td>
+                <td>@item?.ExtraCostPerKg</td>
+                <td>@item?.ExtraCostDifficult</td>
+                <td>@item?.CubicRate</td>
+                <td>@item?.MinCharge</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item?.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item?.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item?.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Create New</a>

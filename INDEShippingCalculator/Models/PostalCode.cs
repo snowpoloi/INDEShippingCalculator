@@ -3,9 +3,11 @@
     public class PostalCode
     {
         public int Id { get; set; }
-        public string Code { get; set; } = string.Empty;
-        public string Nomos { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-        public string Area { get; set; } = string.Empty;
+        public string? Code { get; set; }
+        public string? Nomos { get; set; }
+        public string? City { get; set; }
+        public string? Area { get; set; }
+        public bool IsDifficultAccess { get; set; }
+        public bool NoCOD { get; set; }
     }
 }

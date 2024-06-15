@@ -1,0 +1,43 @@
+﻿@model INDEShipping.Models.PostalCode
+
+<h2>Create Postal Code</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Code" class="control-label"></label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Nomos" class="control-label"></label>
+        <input asp-for="Nomos" class="form-control" />
+        <span asp-validation-for="Nomos" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="City" class="control-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Area" class="control-label"></label>
+        <input asp-for="Area" class="form-control" />
+        <span asp-validation-for="Area" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IsDifficultAccess" class="control-label"></label>
+        <input asp-for="IsDifficultAccess" class="form-control" />
+        <span asp-validation-for="IsDifficultAccess" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NoCOD" class="control-label"></label>
+        <input asp-for="NoCOD" class="form-control" />
+        <span asp-validation-for="NoCOD" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
