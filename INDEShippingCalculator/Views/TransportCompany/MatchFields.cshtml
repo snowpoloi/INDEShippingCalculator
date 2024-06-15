@@ -1,0 +1,42 @@
+﻿@model INDEShipping.ViewModels.XmlFieldMatchViewModel
+
+@{
+    ViewData["Title"] = "Match Fields";
+}
+
+<h2>Match Fields</h2>
+
+<form asp-action="MatchFields" method="post">
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>XML Field</th>
+                    <th>Database Field</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.XmlFields.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="FieldMappings[@i].XmlField" value="@Model.XmlFields[i]" />
+                            @Model.XmlFields[i]
+                        </td>
+                        <td>
+                            <select name="FieldMappings[@i].DatabaseField" class="form-control">
+                                @foreach (var field in Model.DatabaseFields)
+                                {
+                                    <option value="@field">@field</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Match Fields" class="btn btn-primary" />
+    </div>
+</form>
