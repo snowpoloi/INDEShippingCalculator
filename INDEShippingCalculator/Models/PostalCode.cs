@@ -9,5 +9,8 @@
         public string? Area { get; set; }
         public bool IsDifficultAccess { get; set; }
         public bool NoCOD { get; set; }
+
+        public int TransportCompanyId { get; set; }  // Foreign Key
+        public TransportCompany TransportCompany { get; set; } = null!;
     }
 }

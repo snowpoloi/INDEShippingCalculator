@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using INDEShipping.Data;
 using INDEShipping.Models;
-using System.Threading.Tasks;
+using INDEShipping.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
-using System.Xml;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using System.Collections.Generic;
+using System.IO;
 
 namespace INDEShipping.Controllers
 {
@@ -50,24 +53,50 @@ namespace INDEShipping.Controllers
             return View();
         }
 
-        // POST: TransportCompany/UploadXml
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadXml(IFormFile xmlFile)
+        public IActionResult UploadXml(IFormFile xmlFile)
         {
-            if (xmlFile != null && xmlFile.Length > 0)
+            if (xmlFile == null || xmlFile.Length == 0)
             {
-                using (var stream = xmlFile.OpenReadStream())
+                return BadRequest("Please upload a valid XML file.");
+            }
+
+            List<string> xmlFields;
+            using (var stream = xmlFile.OpenReadStream())
+            {
+                var xmlDoc = XDocument.Load(stream);
+                xmlFields = xmlDoc.Descendants().Select(e => e.Name.LocalName).Distinct().ToList();
+            }
+
+            var databaseFields = new SelectList(new List<string> { "Code", "Nomos", "City", "Area", "IsDifficultAccess", "NoCOD" });
+
+            var viewModel = new XmlFieldMatchViewModel
+            {
+                XmlFields = xmlFields,
+                DatabaseFields = databaseFields
+            };
+
+            return View("MatchFields", viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MatchFields(XmlFieldMatchViewModel model)
+        {
+            foreach (var mapping in model.FieldMappings)
+            {
+                if (mapping.XmlField != null && mapping.DatabaseField != null)
                 {
-                    var xmlDoc = new XmlDocument();
-                    xmlDoc.Load(stream);
-
-                    // Επεξεργασία του XML αρχείου και αποθήκευση στη βάση δεδομένων
-                    // ...
-
-                    await _context.SaveChangesAsync();
+                    var xmlFieldMapping = new XmlFieldMapping
+                    {
+                        XmlField = mapping.XmlField,
+                        DatabaseField = mapping.DatabaseField
+                    };
+                    _context.XmlFieldMappings.Add(xmlFieldMapping);
                 }
             }
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
     }
