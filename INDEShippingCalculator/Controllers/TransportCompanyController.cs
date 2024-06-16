@@ -1,103 +1,69 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using System.Xml;
+using System.Collections.Generic;
+using INDEShipping.ViewModels;
 using INDEShipping.Data;
 using INDEShipping.Models;
-using INDEShipping.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using System.IO;
+using Microsoft.AspNetCore.Mvc;
 
-namespace INDEShipping.Controllers
+public class TransportCompanyController : Controller
 {
-    public class TransportCompanyController : Controller
+    private readonly ApplicationDbContext _context;
+
+    public TransportCompanyController(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public TransportCompanyController(ApplicationDbContext context)
+    public IActionResult UploadXml()
+    {
+        ViewBag.TransportCompanies = new SelectList(_context.TransportCompanies, "Id", "Name");
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadXml(UploadXmlViewModel model)
+    {
+        if (model.File == null || model.File.Length == 0)
         {
-            _context = context;
+            ViewBag.Message = "Please select a valid XML file.";
+            ViewBag.TransportCompanies = new SelectList(_context.TransportCompanies, "Id", "Name");
+            return View(model);
         }
 
-        // GET: TransportCompany
-        public async Task<IActionResult> Index()
+        var transportCompany = await _context.TransportCompanies.FindAsync(model.TransportCompanyId);
+        if (transportCompany == null)
         {
-            return View(await _context.TransportCompanies.ToListAsync());
+            return NotFound();
         }
 
-        // GET: TransportCompany/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        var postalCodes = new List<PostalCode>();
 
-        // POST: TransportCompany/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,MaxLength,MaxWidth,MaxHeight,MaxWeight,MaxCubic,OfferType")] TransportCompany transportCompany)
+        using (var stream = new StreamReader(model.File.OpenReadStream()))
         {
-            if (ModelState.IsValid)
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(stream);
+
+            foreach (XmlNode node in xmlDocument.SelectNodes("//PostalCode"))
             {
-                _context.Add(transportCompany);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(transportCompany);
-        }
-
-        // GET: TransportCompany/UploadXml
-        public IActionResult UploadXml()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult UploadXml(IFormFile xmlFile)
-        {
-            if (xmlFile == null || xmlFile.Length == 0)
-            {
-                return BadRequest("Please upload a valid XML file.");
-            }
-
-            List<string> xmlFields;
-            using (var stream = xmlFile.OpenReadStream())
-            {
-                var xmlDoc = XDocument.Load(stream);
-                xmlFields = xmlDoc.Descendants().Select(e => e.Name.LocalName).Distinct().ToList();
-            }
-
-            var databaseFields = new SelectList(new List<string> { "Code", "Nomos", "City", "Area", "IsDifficultAccess", "NoCOD" });
-
-            var viewModel = new XmlFieldMatchViewModel
-            {
-                XmlFields = xmlFields,
-                DatabaseFields = databaseFields
-            };
-
-            return View("MatchFields", viewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> MatchFields(XmlFieldMatchViewModel model)
-        {
-            foreach (var mapping in model.FieldMappings)
-            {
-                if (mapping.XmlField != null && mapping.DatabaseField != null)
+                var postalCode = new PostalCode
                 {
-                    var xmlFieldMapping = new XmlFieldMapping
-                    {
-                        XmlField = mapping.XmlField,
-                        DatabaseField = mapping.DatabaseField
-                    };
-                    _context.XmlFieldMappings.Add(xmlFieldMapping);
-                }
+                    Code = node.SelectSingleNode("Code")?.InnerText,
+                    Nomos = node.SelectSingleNode("Nomos")?.InnerText,
+                    City = node.SelectSingleNode("City")?.InnerText,
+                    Area = node.SelectSingleNode("Area")?.InnerText,
+                    IsDifficultAccess = model.XmlType == "DifficultAreas",
+                    NoCOD = model.XmlType == "NoCodAreas"
+                };
+
+                postalCodes.Add(postalCode);
             }
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
         }
+
+        _context.PostalCodes.AddRange(postalCodes);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 }

@@ -1,4 +1,4 @@
-﻿@model INDEShipping.Models.TransportCompany
+﻿@model INDEShipping.ViewModels.UploadXmlViewModel
 
 @{
     ViewData["Title"] = "Upload XML";
@@ -6,16 +6,22 @@
 
 <h2>Upload XML</h2>
 
-<form asp-action="UploadXml" enctype="multipart/form-data">
+<form asp-action="UploadXml" enctype="multipart/form-data" method="post">
     <div class="form-group">
-        <label for="xmlFile">Select XML file to upload:</label>
-        <input type="file" name="xmlFile" class="form-control" />
+        <label for="transportCompanyId">Transport Company</label>
+        <select asp-for="TransportCompanyId" class="form-control" asp-items="ViewBag.TransportCompanies"></select>
     </div>
     <div class="form-group">
-        <input type="submit" value="Upload" class="btn btn-primary" />
+        <label for="xmlType">XML Type</label>
+        <select asp-for="XmlType" class="form-control">
+            <option value="ServedAreas">Served Areas</option>
+            <option value="DifficultAreas">Difficult Areas</option>
+            <option value="NoCodAreas">No COD Areas</option>
+        </select>
     </div>
+    <div class="form-group">
+        <label for="file">Select XML file</label>
+        <input type="file" name="file" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
 </form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
