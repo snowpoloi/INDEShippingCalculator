@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INDEShipping.Data;
 using INDEShipping.Models;
 using INDEShipping.ViewModels;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace INDEShipping.Controllers
 {
@@ -25,6 +23,24 @@ namespace INDEShipping.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.TransportCompanies.ToListAsync());
+        }
+
+        // GET: TransportCompany/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var transportCompany = await _context.TransportCompanies
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (transportCompany == null)
+            {
+                return NotFound();
+            }
+
+            return View(transportCompany);
         }
 
         // GET: TransportCompany/Create
@@ -120,7 +136,7 @@ namespace INDEShipping.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var transportCompany = await _context.TransportCompanies.FindAsync(id);
-            _context.TransportCompanies.Remove(transportCompany);
+            _context.TransportCompanies.Remove(transportCompany ?? new TransportCompany());
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -130,58 +146,42 @@ namespace INDEShipping.Controllers
             return _context.TransportCompanies.Any(e => e.Id == id);
         }
 
-        // Προσθήκη υποστήριξης για ανέβασμα XML
         // GET: TransportCompany/UploadXml
         public IActionResult UploadXml()
         {
-            ViewBag.TransportCompanies = new SelectList(_context.TransportCompanies, "Id", "Name");
-            return View();
+            return View(new UploadXmlViewModel());
         }
 
         // POST: TransportCompany/UploadXml
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadXml(UploadXmlViewModel model)
         {
-            if (model.File == null || model.File.Length == 0)
+            if (ModelState.IsValid)
             {
-                ViewBag.Message = "Please select a valid XML file.";
-                ViewBag.TransportCompanies = new SelectList(_context.TransportCompanies, "Id", "Name");
-                return View(model);
-            }
-
-            var transportCompany = await _context.TransportCompanies.FindAsync(model.TransportCompanyId);
-            if (transportCompany == null)
-            {
-                return NotFound();
-            }
-
-            var postalCodes = new List<PostalCode>();
-
-            using (var stream = new StreamReader(model.File.OpenReadStream()))
-            {
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(stream);
-
-                foreach (XmlNode node in xmlDocument.SelectNodes("//PostalCode"))
+                // Logic to process the uploaded XML file
+                // var xmlFields = ProcessXmlFile(model.File);
+                var xmlFields = new List<string> { "Field1", "Field2", "Field3" }; // Mock data for example
+                var viewModel = new XmlFieldMatchViewModel
                 {
-                    var postalCode = new PostalCode
-                    {
-                        Code = node.SelectSingleNode("Code")?.InnerText,
-                        Nomos = node.SelectSingleNode("Nomos")?.InnerText,
-                        City = node.SelectSingleNode("City")?.InnerText,
-                        Area = node.SelectSingleNode("Area")?.InnerText,
-                        IsDifficultAccess = model.XmlType == "DifficultAreas",
-                        NoCOD = model.XmlType == "NoCodAreas"
-                    };
-
-                    postalCodes.Add(postalCode);
-                }
+                    XmlFields = xmlFields,
+                    DatabaseFields = new SelectList(new List<string> { "DatabaseField1", "DatabaseField2" })
+                };
+                return View("MatchFields", viewModel);
             }
-
-            _context.PostalCodes.AddRange(postalCodes);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            return View(model);
         }
-    }
-}
+
+        // POST: TransportCompany/MatchFields
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MatchFields(XmlFieldMatchViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Logic to save field mappings to the database
+                foreach (var mapping in model.FieldMappings ?? new List<FieldMapping>())
+                {
+                    var xmlField = mapping.XmlField ?? string.Empty;
+                    var dbField = mapping.DatabaseField ?? string.Empty;
+                    // Add your logic here to handle

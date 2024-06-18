@@ -10,9 +10,5 @@ namespace INDEShipping.ViewModels
         public List<FieldMapping> FieldMappings { get; set; } = new List<FieldMapping>();
     }
 
-    public class FieldMapping
-    {
-        public string? XmlField { get; set; }
-        public string? DatabaseField { get; set; }
-    }
+
 }
